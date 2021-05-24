@@ -1,0 +1,210 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May 20 09:55:21 2021
+
+@author: Abir
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def author():  		  	   		   	 			  		 			 	 	 		 		 	
+    """  		  	   		   	 			  		 			 	 	 		 		 	
+    :return: The GT username of the student  		  	   		   	 			  		 			 	 	 		 		 	
+    :rtype: str  		  	   		   	 			  		 			 	 	 		 		 	
+    """  		  	   		   	 			  		 			 	 	 		 		 	
+    return "rsahai6"  # replace tb34 with your Georgia Tech username.  		  	   		   	 			  		 			 	 	 		 		 	
+  		  	   		   	 			  		 			 	 	 		 		 	
+  		  	   		   	 			  		 			 	 	 		 		 	
+def gtid():  		  	   		   	 			  		 			 	 	 		 		 	
+    """  		  	   		   	 			  		 			 	 	 		 		 	
+    :return: The GT ID of the student  		  	   		   	 			  		 			 	 	 		 		 	
+    :rtype: int  		  	   		   	 			  		 			 	 	 		 		 	
+    """  		  	   		   	 			  		 			 	 	 		 		 	
+    return 123456  # replace with your GT ID number  		  	   		   	 			  		 			 	 	 		 		 	
+  		  	   		   	 	
+def get_spin_result(win_prob):  		   	  			    		  		  		    	 		 		   		 		  
+	result = False  	
+	   	  			    		  		  		    	 		 		   		 		  
+	if np.random.random() <= win_prob:  
+       	   	  			    		  		  		    	 		 		   		 		  
+		result = True  		   	  			    		  		  		    	 		 		   		 		  
+	return result  	
+
+#get_spin_result(9/19)
+
+def test_code(): 
+    		   	  			    		  		  		    	 		 		   		 		  
+            win_prob = 0.474 # set appropriately to the probability of a win
+            np.random.seed(903647829) # do this only once
+              		   	  			    		  		  		    	 		 		   		 		  
+        	#print get_spin_result(win_prob) # test the roulette spin
+         #####Experiment 1 		
+            #winnings1=[]   	  			    	
+            for x in range(10):
+                itera=0
+                winnings=np.zeros(1000)
+                episode_winnings =0
+                while(episode_winnings<80 and itera<1000):
+                    won=False
+                    bet_amount=1
+                    while not won:
+                        won = get_spin_result(0.474)
+                        if won==True:
+                            episode_winnings+=bet_amount
+                            winnings[itera]=episode_winnings
+                            itera+=1
+                            
+                        else:
+                            episode_winnings-=bet_amount
+                            winnings[itera]=episode_winnings
+                            bet_amount*=2
+                            itera+=1
+                if episode_winnings>=80:
+                    winnings[itera-1:]=80
+                    
+                	  		   	  			    		  		  		    	 		 		   		 		  
+                
+                plt.title("Figure 1")
+                   
+                plt.xlabel("Number of Iterations")
+                plt.ylabel("Total Winnings")
+                
+                plt.axis([0, 300, -256, 100])
+                plt.plot(winnings, label='episode'+str(x)) 
+                plt.legend(loc='lower right')
+                plt.savefig("Fig1.png")
+            plt.show()  	
+            	#Exepriment 1 fig 2 and fig3	
+           # return winnings 
+            
+            
+            winnings2=[]
+            for x in range(1000):
+                itera=0
+                winnings_new=np.zeros(1000)
+                episode_winnings_new =0
+                while(episode_winnings_new<80 and itera<1000):
+                    won=False
+                    bet_amount=1
+                    while not won:
+                        won = get_spin_result(0.474)
+                        if won==True:
+                   
+                            episode_winnings_new+=bet_amount
+                            winnings_new[itera]=episode_winnings_new
+                            itera+=1
+                            
+                        else:
+                            episode_winnings_new-=bet_amount
+                            winnings_new[itera]=episode_winnings_new
+                            bet_amount*=2
+                            itera+=1
+                if episode_winnings_new>=80:
+                    winnings_new[itera-1:]=80
+                    winnings2.append(winnings_new)
+           # print(winnings2)
+                #	plt.savefig("fig1.png")
+            mean= np.mean(winnings2, axis=0)
+               
+                #a.append(mean)
+                #print(a)
+            median=np.median(winnings2, axis=0)
+            stdev = np.std(winnings2, axis=0)
+           # print(mean)
+           # print(median)
+            #print(stdev)
+            plt.title("Figure 2")
+                        
+                    
+            plt.xlabel("Number of Iterations")
+            plt.ylabel("Total Winnings")
+            
+            plt.axis([0, 300, -256, 100])
+            plt.plot(mean, label='Mean')
+                #print(mean)  
+            plt.plot(mean + stdev, label='Mean+STD')
+            plt.plot(mean - stdev, label='Mean-STD')
+            plt.legend(loc='lower right')
+            plt.savefig("Fig2.png")
+            plt.show()
+                 
+            plt.title("Figure 3")
+            
+            plt.xlabel("Number of Iterations")
+            plt.ylabel("Total Winnings")
+            plt.axis([0, 300, -256, 100])
+            plt.plot(median, label='Median')
+            plt.plot(median + stdev, label='Median+STD')
+            plt.plot(median - stdev, label='Median-STD')
+            plt.legend(loc='lower right')
+            plt.savefig("Fig3.png")
+            plt.show()
+            	#plt.savefig("fig2.png")
+            #####Experiment 2
+            winnings3=[]
+            for x in range(1000):
+                itera=0
+                realsimul_winnings=np.zeros(1000)
+                episode_winnings =0
+                while(episode_winnings<80 and episode_winnings>-256 and itera<1000):
+                    won=False
+                    bet_amount=1
+                    while not won:
+                        won = get_spin_result(0.474)
+                        if won==True:
+                            episode_winnings+=bet_amount
+                            realsimul_winnings[itera]=episode_winnings
+                            itera+=1
+                            
+                        else:
+                            episode_winnings-=bet_amount
+                            realsimul_winnings[itera]=episode_winnings
+                            if bet_amount*2>=episode_winnings+256:
+                                 bet_amount=episode_winnings+256
+                            else:
+                    
+                                bet_amount*=2
+                                itera+=1
+                if episode_winnings>=80:
+                    realsimul_winnings[itera-1:]=80
+                    winnings3.append(realsimul_winnings)
+                
+                if episode_winnings==-256:
+                    realsimul_winnings[itera-1:]=-256
+                    winnings3.append(realsimul_winnings)
+                #print(winnings3)   
+            real_mean = np.mean(winnings3, axis=0)
+            real_median=np.median(winnings3, axis=0)
+            real_stdev = np.std(winnings3, axis=0)
+            
+            plt.title("Figure 4")
+            plt.axis([0, 300, -256, 100])  
+            plt.xlabel("Number of Iterations")
+            plt.ylabel("Total Winnings")
+            
+            plt.plot(real_mean, label='Mean')
+            plt.plot(real_mean + real_stdev, label='Mean+STD')
+            plt.plot(real_mean - real_stdev, label='Mean-STD')
+            plt.legend(loc='best')
+            plt.savefig("Fig4.png")
+            plt.show()
+            
+            plt.title("Figure 5")
+            plt.axis([0, 300, -256, 100])
+            plt.xlabel("Number of Iterations")
+            plt.ylabel("Total Winnings")
+           
+            plt.plot(real_median, label='Median')
+            plt.plot(real_median + real_stdev, label='Median+STD')
+            plt.plot(real_median - real_stdev, label='Mean-STD')  
+            plt.legend(loc='best')
+            plt.savefig("Fig5.png")
+            plt.show()
+        
+if __name__ == "__main__":  		  	   		   	 			  		 			 	 	 		 		 	
+    test_code()  	
+            
+  		  	   		   	 			  		 			 	 	 		 		 	
+if __name__ == "__main__":  		  	   		   	 			  		 			 	 	 		 		 	
+    test_code()   		   	  			    
